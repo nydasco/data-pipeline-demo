@@ -1,0 +1,60 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - load_to_duckdb
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_coins
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: get_coins
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: load_to_duckdb
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - get_coins
+  uuid: load_to_duckdb
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: null
+data_integration: null
+description: null
+executor_config: {}
+executor_count: 1
+executor_type: local_python
+extensions: {}
+name: get_coins
+notification_config: {}
+remote_variables_dir: null
+retry_config:
+  delay: 1
+  exponential_backoff: true
+  retries: 2
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+uuid: get_coins
+variables_dir: /home/src/mage_data/data_pipeline_demo
+widgets: []
