@@ -14,7 +14,11 @@ def extract_from_api() -> pl.DataFrame:
     response = requests.get(url)
     data = response.text
 
-    df = pl.read_json(io.StringIO(data), infer_schema_length=None)
+    df = pl.read_json(
+            io.StringIO(data), 
+            infer_schema_length=None
+         )
+        
     return df
 
 def load_to_delta(df) -> None:
