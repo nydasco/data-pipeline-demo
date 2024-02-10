@@ -1,30 +1,13 @@
 version: '3.9'
 
 services:
-  mageai:
-    image: mageai/mageai:latest
-    build:
-      context: .
-    command: mage start data_pipeline_demo
-    environment:
-      - ENV=dev
-    ports:
-      - 6789:6789
-    volumes:
-      - .:/home/src
-    restart: on-failure:5
-    stdin_open: true
-    tty: true
-    networks:
-      - pipeline_network
-      
   minio:
     image: docker.io/bitnami/minio:latest
     ports:
       - '9000:9000'
       - '9001:9001'
-    networks:
-      - pipeline_network
+    #networks:
+    #  - pipeline_network
     volumes:
       - 'minio_data:/data'
     environment:
@@ -32,9 +15,9 @@ services:
       - MINIO_ROOT_PASSWORD=some_password
       - MINIO_DEFAULT_BUCKETS=s3storage
 
-networks:
-  pipeline_network:
-    driver: bridge
+#networks:
+#  pipeline_network:
+#    driver: bridge
 
 volumes:
   minio_data:
