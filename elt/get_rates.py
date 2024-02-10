@@ -21,6 +21,7 @@ def load_to_delta(df) -> None:
     """
     Load the data into Delta
     """
+    
     uri = "s3://bronze/audtousd"
 
     df.write_delta(
