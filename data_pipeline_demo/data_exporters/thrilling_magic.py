@@ -17,7 +17,7 @@ def export_data(df, *args, **kwargs):
         "AWS_S3_ALLOW_UNSAFE_RENAME": "TRUE",
     }
 
-    uri = 's3://bronze/coins'
+    uri = 's3://bronze/coin_history'
     
     df.write_delta(
         uri,

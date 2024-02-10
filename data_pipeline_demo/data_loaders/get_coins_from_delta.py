@@ -1,4 +1,6 @@
 import polars as pl
+from datetime import date, timedelta
+import requests
 if 'data_loader' not in globals():
     from mage_ai.data_preparation.decorators import data_loader
 if 'test' not in globals():
@@ -18,14 +20,24 @@ def load_data(*args, **kwargs):
         "AWS_STORAGE_ALLOW_HTTP": "TRUE",
         "AWS_S3_ALLOW_UNSAFE_RENAME": "TRUE",
     }
-    uri = 's3://s3storage/coins'
+    
+    uri = 's3://bronze/coins'
 
     df = pl.read_delta(
         source = uri,
         storage_options = storage_options
     )
 
-    return df['id']
+    yesterday = date.today() - timedelta(days=1)
+
+    data_set = {}
+
+    for i in df['id']:
+        url = f"https://api.coingecko.com/api/v3/coins/{i}/history?date={yesterday.strftime('%d-%m-%Y')}"
+        response = requests.get(url)
+        data_set.update({url: response.text})
+
+    return data_set
 
 @test
 def test_output(output, *args) -> None:

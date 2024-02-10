@@ -54,12 +54,13 @@ concurrency_config: {}
 conditionals: []
 created_at: '2024-02-09 21:45:57.621837+00:00'
 data_integration: null
-description: null
+description: Connect to the API and pull the list of supported coins. Load these into
+  a DeltaTable in the S3 Object Store.
 executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: load_coins_to_deltatable
+name: load_coins_to_bronze
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -69,6 +70,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: load_coins_to_deltatable
+uuid: load_coins_to_bronze
 variables_dir: /home/src/mage_data/data_pipeline_demo
 widgets: []
