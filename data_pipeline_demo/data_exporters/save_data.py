@@ -1,5 +1,3 @@
-import pandas as pd
-#from deltalake.writer import write_deltalake
 from deltalake import write_deltalake
 if 'data_exporter' not in globals():
     from mage_ai.data_preparation.decorators import data_exporter
