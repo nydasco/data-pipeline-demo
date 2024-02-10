@@ -10,7 +10,10 @@ def extract_from_delta() -> pl.DataFrame:
     
     uri = "s3://bronze/audtousd"
 
-    df = pl.read_delta(uri, storage_options = params.storage_options)
+    df = pl.read_delta(
+            uri, 
+            storage_options = params.storage_options
+         )
 
     return df
 
