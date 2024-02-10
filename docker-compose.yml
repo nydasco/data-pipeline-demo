@@ -15,3 +15,27 @@ services:
     restart: on-failure:5
     stdin_open: true
     tty: true
+    networks:
+      - pipeline_network
+      
+  minio:
+    image: docker.io/bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - pipeline_network
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=some_password
+      - MINIO_DEFAULT_BUCKETS=s3storage
+
+networks:
+  pipeline_network:
+    driver: bridge
+
+volumes:
+  minio_data:
+    driver: local

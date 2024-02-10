@@ -3,19 +3,36 @@ blocks:
   color: null
   configuration: {}
   downstream_blocks:
-  - load_to_duckdb
+  - add_attributes
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
   name: get_coins
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: get_coins
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - save_data
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: add_attributes
+  retry_config: null
+  status: updated
+  timeout: null
+  type: transformer
+  upstream_blocks:
+  - get_coins
+  uuid: add_attributes
+- all_upstream_blocks_executed: false
   color: null
   configuration: {}
   downstream_blocks: []
@@ -23,38 +40,35 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: python
-  name: load_to_duckdb
+  name: save_data
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - get_coins
-  uuid: load_to_duckdb
+  - add_attributes
+  uuid: save_data
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
 conditionals: []
-created_at: null
+created_at: '2024-02-09 21:45:57.621837+00:00'
 data_integration: null
 description: null
 executor_config: {}
 executor_count: 1
-executor_type: local_python
+executor_type: null
 extensions: {}
-name: get_coins
+name: pipeline
 notification_config: {}
 remote_variables_dir: null
-retry_config:
-  delay: 1
-  exponential_backoff: true
-  retries: 2
+retry_config: {}
 run_pipeline_in_one_process: false
 settings:
   triggers: null
 spark_config: {}
 tags: []
 type: python
-uuid: get_coins
+uuid: pipeline
 variables_dir: /home/src/mage_data/data_pipeline_demo
 widgets: []
