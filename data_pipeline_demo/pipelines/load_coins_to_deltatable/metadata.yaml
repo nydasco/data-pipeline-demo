@@ -59,7 +59,7 @@ executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: pipeline
+name: load_coins_to_deltatable
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -69,6 +69,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: pipeline
+uuid: load_coins_to_deltatable
 variables_dir: /home/src/mage_data/data_pipeline_demo
 widgets: []
