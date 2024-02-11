@@ -17,7 +17,7 @@ def extract_from_delta(from_rate = str, to_rate = str) -> pl.DataFrame:
 
     return df
 
-def load_dim_currency(df) -> pl.SQLContext:
+def load_dim_currency(df) -> None:
     """
     Saves a Kimball dimension for currencies
     """
@@ -47,7 +47,38 @@ def load_dim_currency(df) -> pl.SQLContext:
         storage_options = params.storage_options,
     )
 
-    return data
+    return None
+
+def load_fct_rates(df) -> None:
+    """
+    Saves a Kimball fact for rates
+    """
+
+    sql = pl.SQLContext(df = df).execute(
+        """
+        SELECT 
+            date,
+            from_currency AS dim_currency_from,
+            to_currency AS dim_currency_to,
+            open AS opening_rate,
+            close AS closing_rate
+        FROM
+            df
+        """
+    )
+
+    data = sql.collect()
+    
+    uri = f"s3://gold/fct_rates"
+
+    data.write_delta(
+        uri,
+        mode = "append",
+        overwrite_schema = True,
+        storage_options = params.storage_options,
+    )
+
+    return None
 
 def main():
     dfs = []
@@ -60,9 +91,9 @@ def main():
 
     combined_df = pl.concat(dfs)
 
-    dim_currency = load_dim_currency(combined_df)
+    load_dim_currency(combined_df)
+    load_fct_rates(combined_df)
 
-    print(dim_currency)
 
 
 if __name__ == "__main__":

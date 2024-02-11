@@ -13,6 +13,4 @@ Run the queries in the following order:
 2. transform_rates_to_silver.py
 3. present_rates_in_gold.py
 
-The output will be a dimension table in the gold layer that lists the rates that have been captured.
-
-
+The output will be a fact table and a dimension table.
