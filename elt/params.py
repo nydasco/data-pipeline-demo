@@ -1,6 +1,6 @@
 storage_options = {
-    "AWS_ACCESS_KEY_ID": "CTvEpVXPKyOr2wwBWoHL",
-    "AWS_SECRET_ACCESS_KEY": "mTFa0ly4KXREkI1Kd2ngUsbNOpO19CiMlzQxTnQ3",
+    "AWS_ACCESS_KEY_ID": "admin",
+    "AWS_SECRET_ACCESS_KEY": "some_password",
     "AWS_REGION": "us-east-1",
     "AWS_ENDPOINT_URL": "http://localhost:9000",
     "AWS_ALLOW_HTTP": "TRUE",
@@ -8,3 +8,9 @@ storage_options = {
 }
 
 api_key = "TXCEV1NK9XB4C2LS"
+
+rates = [
+            {"AUD": "USD"}, 
+            {"AUD": "CAD"},
+            {"AUD": "GBP"}
+        ]
