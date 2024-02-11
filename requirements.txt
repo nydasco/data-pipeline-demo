@@ -1,0 +1,10 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+deltalake==0.15.3
+idna==3.6
+numpy==1.26.4
+polars==0.20.7
+pyarrow==15.0.0
+pyarrow-hotfix==0.6
+requests==2.31.0
+urllib3==2.2.0
