@@ -1,5 +1,5 @@
 # data-pipeline-demo
-A demonstration of an ELT (Extract, Load, Transform) pipeline using Polars to store data in DeltaTables.
+A demonstration of an ELT (Extract, Load, Transform) pipeline using Polars to store data in DeltaTables within local S3 object storage.
 
 Run `docker-compose up` to start MinIO
 
