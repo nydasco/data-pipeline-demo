@@ -36,7 +36,6 @@ def load_to_delta(df: pl.DataFrame, from_rate: str, to_rate: str) -> None:
     )
 
 def main():
-
     for pair in params.rates:
         for key in pair:
             df = extract_from_api(key, pair[key])

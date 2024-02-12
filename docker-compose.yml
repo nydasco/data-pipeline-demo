@@ -93,7 +93,8 @@ services:
       - '9000:9000'
       - '9001:9001'
     networks:
-      - pipeline_network
+      pipeline_network:
+        ipv4_address: 10.5.0.5
     volumes:
       - 'minio_data:/data'
     environment:
@@ -106,6 +107,10 @@ services:
 networks:
   pipeline_network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
 
 volumes:
   minio_data:

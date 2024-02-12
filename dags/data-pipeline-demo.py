@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
- 
+
 from datetime import datetime
  
 with DAG(
@@ -14,7 +14,7 @@ with DAG(
     start_task = EmptyOperator(
         task_id='start'
     )
- 
+
     get_rates_to_bronze = BashOperator(
         task_id='get_rates_to_bronze',
         bash_command='python /opt/airflow/dags/elt/get_rates_to_bronze.py'
