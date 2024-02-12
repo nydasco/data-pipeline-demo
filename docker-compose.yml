@@ -6,6 +6,8 @@ services:
     container_name: postgres
     ports:
       - "5434:5432"
+    networks:
+      - pipeline_network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
@@ -14,8 +16,7 @@ services:
       - .env
  
   scheduler:
-    #image: apache/airflow:2.3.0
-    build: .
+    image: data-pipeline-demo
     user: "${AIRFLOW_UID}:0"
     env_file:
       - .env
@@ -34,10 +35,11 @@ services:
     restart: on-failure
     ports:
       - "8793:8793"
+    networks:
+      - pipeline_network
  
   webserver:
-    #image: apache/airflow:2.3.0
-    build: .
+    image: data-pipeline-demo
     user: "${AIRFLOW_UID}:0"
     env_file:
       - .env
@@ -56,6 +58,8 @@ services:
     command: webserver
     ports:
       - "8080:8080"
+    networks:
+      - pipeline_network
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -63,8 +67,7 @@ services:
       retries: 5
    
   airflow-init:
-    #image: apache/airflow:2.3.0
-    build: .
+    image: data-pipeline-demo
     user: "${AIRFLOW_UID}:0"
     env_file:
       - .env
@@ -81,14 +84,16 @@ services:
         mkdir -p /sources/logs /sources/dags /sources/plugins
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
         exec /entrypoint airflow version
+    networks:
+      - pipeline_network
 
   minio:
     image: docker.io/bitnami/minio:latest
     ports:
       - '9000:9000'
       - '9001:9001'
-    #networks:
-    #  - pipeline_network
+    networks:
+      - pipeline_network
     volumes:
       - 'minio_data:/data'
     environment:
@@ -98,6 +103,9 @@ services:
     env_file:
       - .env
 
+networks:
+  pipeline_network:
+    driver: bridge
 
 volumes:
   minio_data:
