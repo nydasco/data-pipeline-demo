@@ -6,7 +6,7 @@ In order to run this demonstration:
 2. This build of Airflow has custom dependecies identified in `requirements.txt`. As such, you need to build the custom image using `docker build -t data-pipeline-demo . -f ./DockerFile`.
 3. Run `docker-compose up` to start MinIO and Airflow
 
-You can view the contents of the buckets as they're populated at http://localhost:9001 using username: `admin` password: `some_password`.
+You can view the contents of the buckets as they're populated at http://localhost:9001 using username: `minio` password: `minio123`.
 You can access Airflow at http://localhost:8080 using username: `airflow` password: `airflow`.
 
 The output will be a fact table and a dimension table in the `gold` bucket.

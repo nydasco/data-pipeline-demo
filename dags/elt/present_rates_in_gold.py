@@ -25,11 +25,13 @@ def load_dim_currency(df) -> None:
     sql = pl.SQLContext(df = df).execute(
         """
         SELECT DISTINCT
+            from_currency_hash AS dim_currency_id,
             from_currency AS currency_code
         FROM
             df
         UNION DISTINCT
         SELECT DISTINCT
+            to_currency_hash AS dim_currency_id,
             to_currency AS currency_code
         FROM
             df
@@ -42,7 +44,7 @@ def load_dim_currency(df) -> None:
 
     data.write_delta(
         uri,
-        mode = "append",
+        mode = "overwrite",
         overwrite_schema = True,
         storage_options = Params.storage_options,
     )
@@ -58,10 +60,10 @@ def load_fct_rates(df) -> None:
         """
         SELECT 
             date,
-            from_currency AS dim_currency_from,
-            to_currency AS dim_currency_to,
+            from_currency_hash AS dim_currency_id_from,
+            to_currency_hash AS dim_currency_id_to,
             open AS opening_rate,
-            close AS closing_rate
+            close - open AS movement
         FROM
             df
         """
@@ -90,11 +92,12 @@ def main():
             print(key, "->", pair[key], "complete.")
 
     combined_df = pl.concat(dfs)
-
-    load_dim_currency(combined_df)
-    load_fct_rates(combined_df)
-
-
+    print(combined_df)
+    try:
+        load_dim_currency(combined_df)
+        load_fct_rates(combined_df)
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     main()
