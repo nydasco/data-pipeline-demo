@@ -104,6 +104,17 @@ services:
     env_file:
       - .env
 
+  plotly:
+    image: data-viz-demo
+    ports:
+      - '9002:9000'
+    networks:
+      - pipeline_network
+    volumes:
+      - ./viz:/code
+    command: python display_data.py
+    
+
 networks:
   pipeline_network:
     driver: bridge
