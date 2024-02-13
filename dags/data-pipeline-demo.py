@@ -4,6 +4,10 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 from datetime import datetime
+
+from elt.get_rates_to_bronze import main as get_rates_to_bronze
+from elt.transform_rates_to_silver import main as transform_rates_to_silver
+from elt.present_rates_in_gold import main as present_rates_in_gold
  
 with DAG(
     dag_id='data-pipeline-demo',
@@ -15,19 +19,19 @@ with DAG(
         task_id='start'
     )
 
-    get_rates_to_bronze = BashOperator(
+    get_rates_to_bronze = PythonOperator(
         task_id='get_rates_to_bronze',
-        bash_command='python /opt/airflow/dags/elt/get_rates_to_bronze.py'
+        python_callable=get_rates_to_bronze
     )
- 
-    transform_rates_to_silver = BashOperator(
+    
+    transform_rates_to_silver = PythonOperator(
         task_id='transform_rates_to_silver',
-        bash_command='python /opt/airflow/dags/elt/transform_rates_to_silver.py'
+        python_callable=transform_rates_to_silver
     )
  
-    present_rates_in_gold = BashOperator(
+    present_rates_in_gold = PythonOperator(
         task_id='present_rates_in_gold',
-        bash_command='python /opt/airflow/dags/elt/present_rates_in_gold.py'
+        python_callable=present_rates_in_gold
     )
  
     end_task = EmptyOperator(

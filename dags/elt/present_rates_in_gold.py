@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import polars as pl
-import params
+from dags.params import Params
 
 def extract_from_delta(from_rate = str, to_rate = str) -> pl.DataFrame:
     """
@@ -12,7 +12,7 @@ def extract_from_delta(from_rate = str, to_rate = str) -> pl.DataFrame:
 
     df = pl.read_delta(
             uri,
-            storage_options = params.storage_options
+            storage_options = Params.storage_options
          )
 
     return df
@@ -44,7 +44,7 @@ def load_dim_currency(df) -> None:
         uri,
         mode = "append",
         overwrite_schema = True,
-        storage_options = params.storage_options,
+        storage_options = Params.storage_options,
     )
 
     return None
@@ -75,7 +75,7 @@ def load_fct_rates(df) -> None:
         uri,
         mode = "append",
         overwrite_schema = True,
-        storage_options = params.storage_options,
+        storage_options = Params.storage_options,
     )
 
     return None
@@ -83,7 +83,7 @@ def load_fct_rates(df) -> None:
 def main():
     dfs = []
 
-    for pair in params.rates:
+    for pair in Params.rates:
         for key in pair:
             df = extract_from_delta(key, pair[key])
             dfs.append(df)

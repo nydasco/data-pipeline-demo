@@ -3,14 +3,14 @@
 import polars as pl
 import requests
 import io
-import params
+from dags.params import Params
 
 def extract_from_api(from_rate = str, to_rate = str) -> pl.DataFrame:
     """
     Get a historical list of exchange rates from an API
     """
 
-    url = f"https://www.alphavantage.co/query?function=FX_DAILY&from_symbol={from_rate}&to_symbol={to_rate}&apikey={params.api_key}"
+    url = f"https://www.alphavantage.co/query?function=FX_DAILY&from_symbol={from_rate}&to_symbol={to_rate}&apikey={Params.api_key}"
     response = requests.get(url)
     data = response.text
 
@@ -32,11 +32,11 @@ def load_to_delta(df: pl.DataFrame, from_rate: str, to_rate: str) -> None:
         uri,
         mode = "append",
         overwrite_schema = True,
-        storage_options = params.storage_options,
+        storage_options = Params.storage_options,
     )
 
 def main():
-    for pair in params.rates:
+    for pair in Params.rates:
         for key in pair:
             df = extract_from_api(key, pair[key])
             load_to_delta(df, key, pair[key])
