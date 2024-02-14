@@ -45,11 +45,14 @@ def main():
     for pair in Params.rates:
         for key in pair:
             df = extract_from_api(key, pair[key])
-            if df.height != 0:
+            if df.height == 0:
+                print(key, "->", pair[key], "failed. No records found.")
+            elif df.height == 1:
+                print(key, "->", pair[key], "failed. Too few records found.")
+            else:
                 load_to_delta(df, key, pair[key])
                 print(key, "->", pair[key], "complete.")
-            else:
-                print(key, "->", pair[key], "failed. No records found.")
+                
 
 if __name__ == "__main__":
     main()

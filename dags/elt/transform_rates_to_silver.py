@@ -95,12 +95,14 @@ def main():
     for pair in Params.rates:
         for key in pair:
             df = extract_from_delta(key, pair[key])
-            if df.height != 0:
+            if df.height == 0:
+                print(key, "->", pair[key], "failed. No records found.")
+            elif df.height == 1:
+                print(key, "->", pair[key], "failed. Too few records found.")
+            else:
                 df1 = transform(df, key, pair[key])
                 load_to_delta(df1, key, pair[key])
                 print(key, "->", pair[key], "complete.")
-            else:
-                print(key, "->", pair[key], "failed.")
 
 if __name__ == "__main__":
     main()
