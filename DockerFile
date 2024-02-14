@@ -1,0 +1,6 @@
+FROM apache/airflow:2.8.1
+
+COPY build/elt/requirements.txt /
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" -r /requirements.txt
