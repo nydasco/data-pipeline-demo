@@ -55,18 +55,18 @@ def transform(df: pl.DataFrame, from_rate: str, to_rate: str) -> pl.DataFrame:
         
         # Hash the currency values
         df = df.with_columns(pl.col("from_currency").apply(hash_currency).alias("from_currency_hash"))
-        df = df.with_columns(pl.col("to_currency").apply(hash_currency).alias("to_currency_hash"))
+        df1 = df.with_columns(pl.col("to_currency").apply(hash_currency).alias("to_currency_hash"))
         
-        df = df.select(
+        df2 = df1.select(
             "date",
             "from_currency",
             "from_currency_hash",
             "to_currency",
             "to_currency_hash",
-            "open",
-            "high",
-            "low",
-            "close"
+            pl.col("open").cast(pl.Float32),
+            pl.col("high").cast(pl.Float32),
+            pl.col("low").cast(pl.Float32),
+            pl.col("close").cast(pl.Float32)
         ).sort("date", descending = False)
     
     except Exception as e:
@@ -75,7 +75,7 @@ def transform(df: pl.DataFrame, from_rate: str, to_rate: str) -> pl.DataFrame:
                 pl.Series("blank", [], dtype=pl.Int32),
             ])
     
-    return df
+    return df2
 
 def load_to_delta(df: pl.DataFrame, from_rate: str, to_rate: str) -> None:
     """

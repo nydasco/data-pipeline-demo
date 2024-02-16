@@ -1,6 +1,17 @@
 version: '3.4'
  
 services:
+  airflow_base: &airflow_base
+    image: data-pipeline-demo
+    user: "${AIRFLOW_UID}:0"
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+
   postgres:
     image: postgres:13
     container_name: postgres
@@ -16,15 +27,7 @@ services:
       - .env
  
   scheduler:
-    image: data-pipeline-demo
-    user: "${AIRFLOW_UID}:0"
-    env_file:
-      - .env
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - /var/run/docker.sock:/var/run/docker.sock
+    <<: *airflow_base
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,13 +44,7 @@ services:
   webserver:
     image: data-pipeline-demo
     user: "${AIRFLOW_UID}:0"
-    env_file:
-      - .env
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - /var/run/docker.sock:/var/run/docker.sock
+    <<: *airflow_base
     depends_on:
       postgres:
         condition: service_healthy
@@ -69,13 +66,7 @@ services:
   airflow-init:
     image: data-pipeline-demo
     user: "${AIRFLOW_UID}:0"
-    env_file:
-      - .env
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - /var/run/docker.sock:/var/run/docker.sock
+    <<: *airflow_base
     container_name: airflow-init
     entrypoint: /bin/bash
     command:
@@ -103,6 +94,15 @@ services:
       - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKETS}
     env_file:
       - .env
+
+  jupyter:
+    image: quay.io/jupyter/scipy-notebook:2024-01-15
+    ports:
+      - '8888:8888'
+    environment:
+      - JUPYTER_TOKEN=easy
+    networks:
+      - pipeline_network
 
 networks:
   pipeline_network:
