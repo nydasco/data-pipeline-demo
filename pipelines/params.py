@@ -4,10 +4,7 @@ class Params(object):
 
     rates = [
                 {"AUD": "USD"}, 
-                {"AUD": "CAD"}
-    ]
-    
-    test = [
+                {"AUD": "CAD"},
                 {"AUD": "GBP"},
                 {"AUD": "EUR"},
                 {"AUD": "NZD"},
@@ -15,15 +12,5 @@ class Params(object):
                 {"USD": "CAD"},
                 {"USD": "GBP"},
                 {"USD": "EUR"},
-                {"USD": "NZD"},
-                {"CAD": "USD"},
-                {"CAD": "AUD"},
-                {"CAD": "GBP"},
-                {"CAD": "EUR"},
-                {"CAD": "NZD"},
-                {"GBP": "USD"},
-                {"GBP": "AUD"},
-                {"GBP": "CAD"},
-                {"GBP": "EUR"},
-                {"GBP": "NZD"}
+                {"USD": "NZD"}
             ]

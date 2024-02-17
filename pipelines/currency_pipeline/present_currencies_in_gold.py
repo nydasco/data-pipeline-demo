@@ -23,6 +23,17 @@ def load_dim_currency(df) -> pl.DataFrame:
             currency AS currency_name
         FROM
             df
+        -- Add unknown and not available currencies (for error handling)
+        UNION
+        SELECT
+            '-1' AS dim_currency_id,
+            'UNKNOWN' AS currency_code,
+            'UNKNOWN' AS currency_name
+        UNION
+        SELECT
+            '-2' AS dim_currency_id,
+            'NOT_AVAILABLE' AS currency_code,
+            'NOT_AVAILABLE' AS currency_name
         """
     )
 

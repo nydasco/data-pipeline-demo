@@ -1,0 +1,5 @@
+FROM apache/airflow:2.8.1
+ENV PATH="/opt/airflow/pipelines:${PATH}"
+RUN echo ${PATH}
+COPY requirements.txt /
+RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" -r /requirements.txt
