@@ -2,7 +2,7 @@ version: '3.4'
  
 services:
   airflow_base: &airflow_base
-    image: data-pipeline-demo
+    image: data-pipeline-airflow-demo
     user: "${AIRFLOW_UID}:0"
     env_file:
       - .env
@@ -10,6 +10,8 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
+      - ./pipelines:/opt/airflow/pipelines
+      - ./seeds:/opt/airflow/seeds
       - /var/run/docker.sock:/var/run/docker.sock
 
   postgres:
@@ -42,8 +44,6 @@ services:
       - pipeline_network
  
   webserver:
-    image: data-pipeline-demo
-    user: "${AIRFLOW_UID}:0"
     <<: *airflow_base
     depends_on:
       postgres:
@@ -64,8 +64,6 @@ services:
       retries: 5
    
   airflow-init:
-    image: data-pipeline-demo
-    user: "${AIRFLOW_UID}:0"
     <<: *airflow_base
     container_name: airflow-init
     entrypoint: /bin/bash
@@ -96,11 +94,14 @@ services:
       - .env
 
   jupyter:
-    image: quay.io/jupyter/scipy-notebook:2024-01-15
+    image: data-pipeline-jupyter-demo
     ports:
       - '8888:8888'
     environment:
       - JUPYTER_TOKEN=easy
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./seeds:/home/jovyan/seeds
     networks:
       - pipeline_network
 

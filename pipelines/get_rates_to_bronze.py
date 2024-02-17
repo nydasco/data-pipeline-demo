@@ -3,11 +3,19 @@
 import polars as pl
 import requests
 import io
-from dags.params import Params
+from pipelines.params import Params
+from pipelines.delta import DeltaS3
 
 def extract_from_api(from_rate = str, to_rate = str) -> pl.DataFrame:
     """
     Get a historical list of exchange rates from an API
+
+    Parameters:
+    from_rate (str): The base currency symbol.
+    to_rate (str): The target currency symbol.
+
+    Returns:
+    pl.DataFrame: A DataFrame containing the historical exchange rates.
     """
 
     url = f"https://www.alphavantage.co/query?function=FX_DAILY&from_symbol={from_rate}&to_symbol={to_rate}&outputsize=full&apikey={Params.api_key}"
@@ -25,31 +33,31 @@ def extract_from_api(from_rate = str, to_rate = str) -> pl.DataFrame:
                 pl.Series("blank", [], dtype=pl.Int32),
             ])
     
+    print(df.head(5))
+    
     return df
 
-def load_to_delta(df: pl.DataFrame, from_rate: str, to_rate: str) -> None:
-    """
-    Load the data into Delta
-    """
-    
-    uri = f"s3://bronze/{from_rate}to{to_rate}"
-
-    df.write_delta(
-        uri,
-        mode = "overwrite",
-        overwrite_schema = True,
-        storage_options = Params.storage_options,
-    )
-
 def main():
+    """
+    This function is the entry point of the data pipeline.
+    It extracts data from an API for each rate pair specified in Params.rates,
+    writes the extracted data to a Delta table in the "bronze" bucket,
+    and prints the status of each extraction process.
+    """
+    deltas3 = DeltaS3()
     for pair in Params.rates:
         for key in pair:
             df = extract_from_api(key, pair[key])
             if df.height != 0:
-                load_to_delta(df, key, pair[key])
+                deltas3.write(df, 
+                              bucket = "bronze",
+                              table = f"{key}to{pair[key]}",
+                              mode = "overwrite",
+                              overwrite_schema = True)
+                
                 print(key, "->", pair[key], "complete.")
             else:
-                print(key, "->", pair[key], "failed. No records found.")
+                print(key, "->", pair[key], "failed. Check the API key and the rate pair.\n", str(df))
 
 if __name__ == "__main__":
     main()

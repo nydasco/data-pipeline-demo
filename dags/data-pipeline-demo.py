@@ -1,13 +1,19 @@
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 from datetime import datetime
 
-from elt.get_rates_to_bronze import main as get_rates_to_bronze
-from elt.transform_rates_to_silver import main as transform_rates_to_silver
-from elt.present_rates_in_gold import main as present_rates_in_gold
+# bronze data
+from pipelines.get_rates_to_bronze import main as get_rates_to_bronze
+from pipelines.get_currencies_to_bronze import main as get_currencies_to_bronze
+
+# silver data
+from pipelines.transform_rates_to_silver import main as transform_rates_to_silver
+from pipelines.transform_currencies_to_silver import main as transform_currencies_to_silver
+
+# gold data
+from pipelines.present_rates_in_gold import main as present_rates_in_gold
  
 with DAG(
     dag_id='data-pipeline-demo',
@@ -23,10 +29,20 @@ with DAG(
         task_id='get_rates_to_bronze',
         python_callable=get_rates_to_bronze
     )
+
+    get_currencies_to_bronze = PythonOperator(
+        task_id='get_currencies_to_bronze',
+        python_callable=get_currencies_to_bronze
+    )
     
     transform_rates_to_silver = PythonOperator(
         task_id='transform_rates_to_silver',
         python_callable=transform_rates_to_silver
+    )
+    
+    transform_currencies_to_silver = PythonOperator(
+        task_id='transform_currencies_to_silver',
+        python_callable=transform_currencies_to_silver
     )
  
     present_rates_in_gold = PythonOperator(
@@ -38,7 +54,4 @@ with DAG(
         task_id='end'
     )
  
-start_task >> get_rates_to_bronze
-get_rates_to_bronze >> transform_rates_to_silver
-transform_rates_to_silver >> present_rates_in_gold
-present_rates_in_gold >> end_task
+start_task >> [get_rates_to_bronze >> transform_rates_to_silver, get_currencies_to_bronze >> transform_currencies_to_silver] >> present_rates_in_gold >> end_task
