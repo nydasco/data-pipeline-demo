@@ -2,7 +2,6 @@
 
 import polars as pl
 
-from pipelines.params import Params
 from pipelines.delta import DeltaS3
 
 def extract_from_csv(file = str) -> pl.DataFrame:

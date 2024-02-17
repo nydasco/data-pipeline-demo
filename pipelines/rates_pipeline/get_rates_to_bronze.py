@@ -3,6 +3,7 @@
 import polars as pl
 import requests
 import io
+
 from pipelines.params import Params
 from pipelines.delta import DeltaS3
 

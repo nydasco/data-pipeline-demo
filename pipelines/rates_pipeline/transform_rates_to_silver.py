@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import polars as pl
+import hashlib
+
 from pipelines.params import Params
 from pipelines.delta import DeltaS3
-import hashlib
 
 def hash_column(column_name) -> str:
     """

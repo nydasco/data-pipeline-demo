@@ -2,9 +2,8 @@
 
 import polars as pl
 import hashlib
-from pipelines.delta import DeltaS3
 
-import hashlib
+from pipelines.delta import DeltaS3
 
 def hash_column(column_name) -> str:
     """
