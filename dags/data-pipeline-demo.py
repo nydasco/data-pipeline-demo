@@ -67,4 +67,4 @@ with DAG(
     )
  
 start_task >> [get_rates_to_bronze >> transform_rates_to_silver >> present_rates_in_gold,
-               get_currencies_to_bronze >> transform_currencies_to_silver, present_currencies_in_gold] >> present_dates_in_gold >> end_task
+               get_currencies_to_bronze >> transform_currencies_to_silver >> present_currencies_in_gold] >> present_dates_in_gold >> end_task
