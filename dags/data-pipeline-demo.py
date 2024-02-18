@@ -19,7 +19,7 @@ from pipelines.generic_pipeline.present_dates_in_gold import main as present_dat
  
 with DAG(
     dag_id='data-pipeline-demo',
-    start_date=datetime(2022, 5, 28),
+    start_date=datetime(2024, 2, 18),
     schedule_interval=None
 ) as dag:
  
